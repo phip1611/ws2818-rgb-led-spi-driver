@@ -1,9 +1,18 @@
+//! Module with all code + comments related to timing. The WS2818 has specific restrictions
+//! how long high and low signal must be send on DIN-wire in nanoseconds. All logic and constants
+//! needed to cope with this are placed here.
+//!
 //! Please note that we have to cope with high frequencies which can be really tricky.
 //! Perhaps you need other timings on your device. This was tested on a Raspberry Pi with
 //! its SPI device.
+//!
+//! See device specification for further details.
 
-// see https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md
+/// The Frequency for the SPI device that should be used. While this was developed I focused
+/// on Raspberry Pi. Works on other Linux systems with SPI device probably too.
 pub const PI_SPI_HZ: u32 = 15_600_000; // 15.6 Mhz
+// see https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md
+
 // this means 1 / 15_600_000 * 1E9 ns/cycle => 64ns / cycle => 15.6 MBit/s
 //
 // See data sheet: https://cdn-shop.adafruit.com/datasheets/WS2812.pdf
@@ -32,6 +41,8 @@ pub const PI_SPI_HZ: u32 = 15_600_000; // 15.6 Mhz
 //
 // => !! we encode one data bit in two SPI byte for the proper timings !!
 
+/// Timing-encoding specific constants. Actual encoding functions should be
+/// inside `crate::encoding`!
 pub mod encoding {
     /// How many SPI bytes must be send for a single data bit.
     /// This number of bytes result in one logical zero or one

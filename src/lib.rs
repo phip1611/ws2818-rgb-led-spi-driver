@@ -1,7 +1,7 @@
 mod setup;
 pub use setup::setup_spi;
 
-mod timings;
+pub mod timings;
 pub mod encoding;
 
 #[cfg(test)]

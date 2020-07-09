@@ -1,7 +1,7 @@
 [package]
 name = "ws2818-rgb-led-spi-driver"
 description = "Simple, educational driver for WS2818 RGB LED (chains). It uses SPI device for timing/clock. Needs Linux and works definetly on Raspberry Pi."
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Philipp Schuster <phip1611@gmail.com>"]
 edition = "2018"
 exclude = [
