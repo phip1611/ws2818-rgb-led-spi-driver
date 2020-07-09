@@ -14,7 +14,7 @@ pub const SPI_BYTES_PER_RGB_PIXEL: usize = COLORS * BITS_PER_COLOR * SPI_BYTES_P
 /// G7..G0,R7..R0,B7..B0
 ///
 /// The resulting is `BYTES_PER_RGB_PIXEL` bytes long.
-pub fn encode_rgb(mut r: u8, mut g: u8, mut b: u8) -> [u8; SPI_BYTES_PER_RGB_PIXEL] {
+pub fn encode_rgb(r: u8, g: u8, b: u8) -> [u8; SPI_BYTES_PER_RGB_PIXEL] {
     let mut spi_bytes: [u8; SPI_BYTES_PER_RGB_PIXEL] = [0; SPI_BYTES_PER_RGB_PIXEL];
     let mut spi_bytes_i = 0;
     let grb = [g, r, b]; // order specified by specification
@@ -24,16 +24,16 @@ pub fn encode_rgb(mut r: u8, mut g: u8, mut b: u8) -> [u8; SPI_BYTES_PER_RGB_PIX
             // for each bit of our color; starting with most significant
             // we encode now one color bit in two spi bytes (for proper timings along with our frequency)
             if 0b10000000 & color_bits == 0 {
-                spi_bytes[i]     = WS2812_LOGICAL_ZERO_BYTES[0];
-                spi_bytes[i + 1] = WS2812_LOGICAL_ZERO_BYTES[1];
+                spi_bytes[spi_bytes_i]     = WS2812_LOGICAL_ZERO_BYTES[0];
+                spi_bytes[spi_bytes_i + 1] = WS2812_LOGICAL_ZERO_BYTES[1];
             } else {
-                spi_bytes[i]     = WS2812_LOGICAL_ONE_BYTES[0];
-                spi_bytes[i + 1] = WS2812_LOGICAL_ONE_BYTES[1];
+                spi_bytes[spi_bytes_i]     = WS2812_LOGICAL_ONE_BYTES[0];
+                spi_bytes[spi_bytes_i + 1] = WS2812_LOGICAL_ONE_BYTES[1];
             }
             color_bits = color_bits << 1;
             spi_bytes_i += 2; // update array index;
         }
     }
-    debug_assert!(spi_bytes_i + 1, SPI_BYTES_PER_RGB_PIXEL);
+    debug_assert_eq!(spi_bytes_i + 1, SPI_BYTES_PER_RGB_PIXEL);
     spi_bytes
 }
