@@ -34,6 +34,6 @@ pub fn encode_rgb(r: u8, g: u8, b: u8) -> [u8; SPI_BYTES_PER_RGB_PIXEL] {
             spi_bytes_i += 2; // update array index;
         }
     }
-    debug_assert_eq!(spi_bytes_i + 1, SPI_BYTES_PER_RGB_PIXEL);
+    debug_assert_eq!(spi_bytes_i, SPI_BYTES_PER_RGB_PIXEL);
     spi_bytes
 }
