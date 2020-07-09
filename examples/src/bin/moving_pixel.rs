@@ -18,7 +18,7 @@ fn main() {
             let mut data = vec![];
             for j in 0..64 {
                 if i == j {
-                    data.extend_from_slice(&encode_rgb(255, 255, 255));
+                    data.extend_from_slice(&encode_rgb(50, 50, 50));
                 } else {
                     data.extend_from_slice(&encode_rgb(0, 0, 0));
                 }
