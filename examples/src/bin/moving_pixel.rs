@@ -24,7 +24,7 @@ fn main() {
                 }
             }
             spi.write_all(&data).unwrap();
-            sleep_busy_waiting(1000 * 1000/5); // 200ms / 5Hz
+            sleep_busy_waiting(1000/5); // 200ms / 5Hz
         }
     }
 
