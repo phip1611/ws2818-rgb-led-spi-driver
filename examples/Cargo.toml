@@ -1,0 +1,11 @@
+[package]
+name = "ws2818-examples"
+version = "0.0.0"
+authors = ["Philipp Schuster <phip1611@gmail.com>"]
+edition = "2018"
+publish = false
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+ws2818-rgb-led-spi-driver = { path = "../" }
