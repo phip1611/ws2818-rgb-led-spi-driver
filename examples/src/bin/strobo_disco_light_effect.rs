@@ -1,6 +1,7 @@
-//! Example that definitely works on Raspberry Pi.
+//! Example that definitely works on Raspberry Pi. I used a 8x8 RGB LED matrix.
 //! Make sure to have "SPI" on your Pi enabled and that MOSI-Pin is connected
-//! with DIN-Pin.
+//! with DIN-Pin. You just need DIN pin, no clock. WS2818 uses one-wire-protocol.
+//! See the specification for details
 
 use std::io::Write;
 
