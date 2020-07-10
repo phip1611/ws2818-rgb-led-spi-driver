@@ -8,7 +8,8 @@ const BITS_PER_COLOR: usize = 8; // 0 to 255
 /// The number of bytes that must be send over SPI to transfer the data of a single RGB pixel.
 pub const SPI_BYTES_PER_RGB_PIXEL: usize = COLORS * BITS_PER_COLOR * SPI_BYTES_PER_DATA_BIT;
 
-/// Encodes RGB-Values to the correct bit representation for the WS2818.
+/// Encodes RGB-Values to the bytes that must be transferred via SPI MOSI.
+/// These SPI bytes represent the logical zeros and ones for WS2818.
 /// This counts in the constraints that come from `crate::timings`-module.
 /// Due to the specification the data is send this way:
 /// G7..G0,R7..R0,B7..B0
@@ -36,4 +37,13 @@ pub fn encode_rgb(r: u8, g: u8, b: u8) -> [u8; SPI_BYTES_PER_RGB_PIXEL] {
     }
     debug_assert_eq!(spi_bytes_i, SPI_BYTES_PER_RGB_PIXEL);
     spi_bytes
+}
+
+/// Encodes multiple RGB values. See `encode_rgb()`.
+pub fn encode_rgb_vec(data: &Vec<(u8, u8, u8)>) -> Vec<u8> {
+    let mut bytes = vec![];
+    data.iter().for_each(|rgb| {
+        bytes.extend_from_slice(&encode_rgb(rgb.0, rgb.1, rgb.2))
+    });
+    bytes
 }
