@@ -8,6 +8,11 @@ use std::io::Write;
 use ws2818_examples::sleep_busy_waiting;
 use ws2818_rgb_led_spi_driver::encoding::encode_rgb;
 
+const FREQUENCY: u64 = 12; // in Hz
+const FLASH_TIME_MS: u64 = 1;
+
+// Strobo light effect like in disco
+// see https://en.wikipedia.org/wiki/Strobe_light
 fn main() {
     println!("Make sure to have \"SPI\" on your Pi enabled and that MOSI-Pin is connected with DIN-Pin!");
     let mut spi = ws2818_rgb_led_spi_driver::setup_spi("/dev/spidev0.0").unwrap();
@@ -28,9 +33,9 @@ fn main() {
     // once! otherwise timings would be impossible to reach
     loop {
         spi.write_all(&white_display_bytes).unwrap();
-        sleep_busy_waiting(1);
+        sleep_busy_waiting(FLASH_TIME_MS);
         spi.write_all(&empty_display_bytes).unwrap();
-        sleep_busy_waiting((1000 / 40) - 1);
+        sleep_busy_waiting((1000 / FREQUENCY) - FLASH_TIME_MS);
     }
 }
 
