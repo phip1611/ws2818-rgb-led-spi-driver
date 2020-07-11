@@ -23,6 +23,23 @@ Have a look into the examples/code for further explications. :)
 ### Examples
 See https://github.com/phip1611/ws2818-rgb-led-spi-driver/tree/master/examples. 
 
+```
+use std::io::Write;
+use ws2818_rgb_led_spi_driver::encoding::{encode_rgb};
+
+fn main() {
+    println!("Make sure to have \"SPI\" on your Pi enabled and that MOSI-Pin is connected with DIN-Pin!");
+    let mut spi = ws2818_rgb_led_spi_driver::setup_spi("/dev/spidev0.0").unwrap();
+
+    let mut spi_bits = vec![];
+    // set first three pixels to bright red, bright green and bright blue
+    spi_bits.extend_from_slice(&encode_rgb(255, 0, 0));
+    spi_bits.extend_from_slice(&encode_rgb(0, 255, 0));
+    spi_bits.extend_from_slice(&encode_rgb(0, 0, 255));
+    spi.write_all(&spi_bits).unwrap();
+}
+```
+
 ##### Links
 
 [0] https://www.az-delivery.de/products/u-64-led-panel?variant=6127700738075 \
