@@ -4,7 +4,13 @@ Make sure to check out [main README.md](../README.md) first.
 Here are a few basic examples! Make sure to run them with SPI enabled on 
 your device (Raspberry Pi) and the MOSI-pin beeing connected to DIN-port.
 
+**All examples I made are for a 8x8 square matrix!**
+With a few adjustments you can use them on other chained WS2818 LEDs as well.
+
+
+
 ## How to run them?
 1) Setup Rust + Cargo ;)
-2) `cargo run --bin moving_pixel` 
-   or `cargo run --bin strobo_disco_light_effect`
+2) `cargo run --bin 8x8-moving_pixel` 
+   or `cargo run --bin 8x8-strobo_disco_light`
+   (there are more examples too in src/bin)
