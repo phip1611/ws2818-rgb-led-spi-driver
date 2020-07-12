@@ -39,11 +39,39 @@ pub fn encode_rgb(r: u8, g: u8, b: u8) -> [u8; SPI_BYTES_PER_RGB_PIXEL] {
     spi_bytes
 }
 
-/// Encodes multiple RGB values. See `encode_rgb()`.
+/// Encodes multiple RGB values in a vector. Uses `encode_rgb()` for each value.
 pub fn encode_rgb_vec(data: &Vec<(u8, u8, u8)>) -> Vec<u8> {
+    encode_rgb_slice(&data[..])
+}
+
+/// Encodes multiple RGB values in a slice. Uses `encode_rgb()` for each value.
+pub fn encode_rgb_slice(data: &[(u8, u8, u8)]) -> Vec<u8> {
     let mut bytes = vec![];
     data.iter().for_each(|rgb| {
         bytes.extend_from_slice(&encode_rgb(rgb.0, rgb.1, rgb.2))
     });
     bytes
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_encode_rgb_vec() {
+        let e_1 = encode_rgb(5, 5, 5);
+        let e_2 = encode_rgb(50, 50, 50);
+        let mut e_12 = vec![];
+        e_1.iter().for_each(|bits| e_12.push(*bits));
+        e_2.iter().for_each(|bits| e_12.push(*bits));
+
+        let vec = vec![(5, 5, 5), (50, 50, 50)];
+        let actual = encode_rgb_vec(&vec);
+
+        assert_eq!(e_12.len(), actual.len());
+        for i in 0..e_12.len() {
+         assert_eq!(e_12[i], actual[i])
+        }
+    }
+
 }

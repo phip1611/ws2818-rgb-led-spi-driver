@@ -1,5 +1,7 @@
 use std::io;
-use spidev::{Spidev, SpidevOptions, SpiModeFlags};
+use spidev::{SpidevOptions, SpiModeFlags};
+/// Reexports Spidev.
+pub use spidev::Spidev;
 use crate::timings::PI_SPI_HZ;
 
 /// Connects your application with the SPI-device of your device.
