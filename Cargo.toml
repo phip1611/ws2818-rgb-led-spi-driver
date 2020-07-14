@@ -1,14 +1,14 @@
 [package]
 name = "ws2818-rgb-led-spi-driver"
-description = "Simple, educational driver for WS2818 RGB LED (chains). It uses SPI device for timing/clock. Needs Linux and works definetly on Raspberry Pi."
-version = "0.1.4"
+description = "Simple, stripped down, educational driver for WS2811, WS2812, WS2812B, WS28XX, WS2818 RGB LED (chains). It uses SPI device for timing/clock. Needs Linux and works definetly on Raspberry Pi."
+version = "0.1.5"
 authors = ["Philipp Schuster <phip1611@gmail.com>"]
 edition = "2018"
 exclude = [
     "examples",
     ".travis.yml",
 ]
-keywords = ["gpio", "spi", "ws2818", "neopixel"]
+keywords = ["gpio", "spi", "ws2811", "ws2812", "ws2818", "neopixel"]
 categories = ["hardware-support"]
 readme = "README.md"
 license = "MIT"

@@ -1,7 +1,19 @@
-# WS2818 RGB LED SPI Driver
+# WS28xx RGB LED SPI Driver
 
-This crate is a driver for WS2818 RGB LED (chains). They are also known as "NeoPixel" devices. It's a simple, educational
-example how to bring your LEDs to life. This [0] is an example device with chained WS2818 RGB LEDs that can be used with this driver.
+This crate is a driver for WS2811, WS2812, WS2812B, WS28XX, WS2818 RGB LED (chains). They are also known as "NeoPixel" devices or "Smard LEDs".
+ 
+### Wait, there are already so many drivers for WS2811/WS2812 on crates.io?
+At the beginning I was not aware of that WS2811, WS2812, WS2812B, ..., WS2818 are basically the same. I just did not notice it. I though I'm having WS2818 LEDs and
+there wasn't a driver for that specific IC with WS2818 in its name.
+See this links to learn about the differences:
+- https://www.alldatasheet.com/view.jsp?Searchword=WS2818
+- https://www.witop-tech.com/what-is-the-difference-ws2818-vs-ws2811-usc1903-magic-color-digital-led-strip/
+
+It seems like all of them work use the same protocol, tho. That means this driver can be used for all of them.
+
+ 
+### About this driver
+It's a **simple, stripped down, educational example** how to bring your LEDs to life. This [0] is an example device with chained WS2818 RGB LEDs that can be used with this driver.
 This driver only works on Linux systems with a SPI device, like Raspberry Pi [1]. This is needed because my driver operates at
 15.6MHz. This is required because I need to reach specific *timings in nanoseconds* according to the specification while sending data [2].
 It uses a one wire protocol.
