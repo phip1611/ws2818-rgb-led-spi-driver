@@ -5,7 +5,6 @@
 
 use ws2818_examples::{get_led_num_from_args, darken_rgb, get_random_pixel_val, sleep_busy_waiting_ms};
 use ws2818_rgb_led_spi_driver::adapter::WS28xxAdapter;
-use std::thread::spawn;
 use std::time::{Instant, Duration};
 use std::ops::Add;
 
@@ -26,7 +25,8 @@ fn main() {
             anim.add_next_light_impulse();
             next_light_time = now.add(Duration::from_secs(1))
         }
-        adapter.write_rgb(&anim.rgb_data);
+        anim.shift_all_pixels();
+        adapter.write_rgb(&anim.rgb_data).unwrap();
         sleep_busy_waiting_ms(FREQUENCY_MS);
     }
 }
@@ -70,7 +70,7 @@ impl MovingLightStripsAnimation {
         }
     }
     fn add_next_light_impulse(&mut self) {
-        let (mut r, mut g, mut b) = get_random_pixel_val();
+        let (r, g, b) = get_random_pixel_val();
         std::mem::replace(&mut self.rgb_data[00], darken_rgb(r, g, b, 0.1));
         std::mem::replace(&mut self.rgb_data[01], darken_rgb(r, g, b, 0.2));
         std::mem::replace(&mut self.rgb_data[02], darken_rgb(r, g, b, 0.4));
@@ -86,10 +86,6 @@ impl MovingLightStripsAnimation {
         std::mem::replace(&mut self.rgb_data[12], darken_rgb(r, g, b, 0.4));
         std::mem::replace(&mut self.rgb_data[13], darken_rgb(r, g, b, 0.2));
         std::mem::replace(&mut self.rgb_data[14], darken_rgb(r, g, b, 0.1));
-    }
-
-    fn on_next_animation_step(&mut self) {
-        self.shift_all_pixels();
     }
 }
 
