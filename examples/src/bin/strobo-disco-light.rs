@@ -1,14 +1,16 @@
-//! Example that definitely works on Raspberry Pi. I used a 8x8 RGB LED matrix.
-//! make sure you have "SPI" on your Pi enabled and that MOSI-Pin is connected
+//! Example that definitely works on Raspberry Pi.
+//! Make sure you have "SPI" on your Pi enabled and that MOSI-Pin is connected
 //! with DIN-Pin. You just need DIN pin, no clock. WS2818 uses one-wire-protocol.
 //! See the specification for details
 
-use ws2818_examples::{sleep_busy_waiting, get_led_num_from_args};
+use ws2818_examples::{sleep_busy_waiting_ms, get_led_num_from_args};
 use ws2818_rgb_led_spi_driver::encoding::encode_rgb;
 use ws2818_rgb_led_spi_driver::adapter::WS28xxAdapter;
 
 const FREQUENCY: u64 = 12; // in Hz
+
 // experiments showed that below 3ms not all RGBs flash properly;
+// this is independent from rust running in release or debug mode
 const FLASH_TIME_MS: u64 = 3;
 
 // Strobo light effect like in disco
@@ -34,9 +36,9 @@ fn main() {
     // once! otherwise timings would be impossible to reach
     loop {
         adapter.write_encoded_rgb(&white_display_bytes).unwrap();
-        sleep_busy_waiting(FLASH_TIME_MS);
+        sleep_busy_waiting_ms(FLASH_TIME_MS);
         adapter.write_encoded_rgb(&empty_display_bytes).unwrap();
-        sleep_busy_waiting((1000 / FREQUENCY) - FLASH_TIME_MS);
+        sleep_busy_waiting_ms((1000 / FREQUENCY) - FLASH_TIME_MS);
     }
 }
 

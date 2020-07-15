@@ -1,9 +1,9 @@
-//! Example that definitely works on Raspberry Pi. I used a 8x8 RGB LED matrix.
-//! make sure you have "SPI" on your Pi enabled and that MOSI-Pin is connected
+//! Example that definitely works on Raspberry Pi.
+//! Make sure you have "SPI" on your Pi enabled and that MOSI-Pin is connected
 //! with DIN-Pin. You just need DIN pin, no clock. WS2818 uses one-wire-protocol.
 //! See the specification for details
 
-use ws2818_examples::{sleep_busy_waiting, get_led_square_dim_from_args};
+use ws2818_examples::{sleep_busy_waiting_ms, get_led_square_dim_from_args};
 use ws2818_rgb_led_spi_driver::encoding::{encode_rgb_slice};
 use ws2818_rgb_led_spi_driver::adapter::WS28xxAdapter;
 
@@ -47,7 +47,7 @@ fn main() {
     let spi_bytes = encode_rgb_slice(&rgb_data);
     adapter.write_encoded_rgb(&spi_bytes).unwrap();
 
-    sleep_busy_waiting(1000);
+    sleep_busy_waiting_ms(1000);
 
     // now let's rotate the bits
 
@@ -72,7 +72,7 @@ fn main() {
         }
         let rgb_data_current_encoded =  encode_rgb_slice(&rgb_data_current);
         adapter.write_encoded_rgb(&rgb_data_current_encoded).unwrap();
-        sleep_busy_waiting(50);
+        sleep_busy_waiting_ms(50);
     }
 
 }

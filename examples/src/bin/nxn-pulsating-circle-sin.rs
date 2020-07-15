@@ -1,9 +1,9 @@
-//! Example that definitely works on Raspberry Pi. I used a 8x8 RGB LED matrix.
-//! make sure you have "SPI" on your Pi enabled and that MOSI-Pin is connected
+//! Example that definitely works on Raspberry Pi.
+//! Make sure you have "SPI" on your Pi enabled and that MOSI-Pin is connected
 //! with DIN-Pin. You just need DIN pin, no clock. WS2818 uses one-wire-protocol.
 //! See the specification for details
 
-use ws2818_examples::{sleep_busy_waiting, get_led_square_dim_from_args};
+use ws2818_examples::{sleep_busy_waiting_ms, get_led_square_dim_from_args};
 use ws2818_rgb_led_spi_driver::encoding::{encode_rgb};
 use std::f64::consts::PI;
 use ws2818_rgb_led_spi_driver::adapter::WS28xxAdapter;
@@ -11,6 +11,8 @@ use ws2818_rgb_led_spi_driver::adapter::WS28xxAdapter;
 // This example uses sinus and cosines to let a growing circle flow through your LED matrix.
 // It looks best on 64x64 displays and more. It calculates all coordinates using sin and cos
 // and tries to map the coordinates to the LED matrix.
+
+// edit: there is still a bug somewhere and because of this it looks weird :/
 fn main() {
     println!("make sure you have \"SPI\" on your Pi enabled and that MOSI-Pin is connected with DIN-Pin!");
     let mut adapter = WS28xxAdapter::new("/dev/spidev0.0").unwrap();
@@ -83,7 +85,7 @@ fn main() {
             });
 
             adapter.write_encoded_rgb(&transfer_bits_vec).unwrap();
-            sleep_busy_waiting(100);
+            sleep_busy_waiting_ms(100);
         }
     }
 }
