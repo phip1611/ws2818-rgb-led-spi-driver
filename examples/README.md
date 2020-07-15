@@ -10,6 +10,6 @@ With a few adjustments you can use them on other chained WS281xx LEDs as well.
 
 ## How to run them?
 1) Setup Rust + Cargo ;)
-2) `cargo run --bin moving_pixel 64` 
-   or `cargo run --bin strobo_disco_light 64`
+2) `cargo run --bin moving-pixel 64` 
+   or `cargo run --bin strobo-disco-light 64`
    (there are more examples too in src/bin)

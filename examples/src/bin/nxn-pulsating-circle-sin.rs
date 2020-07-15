@@ -16,8 +16,8 @@ fn main() {
     let mut adapter = WS28xxAdapter::new("/dev/spidev0.0").unwrap();
 
     let dim = get_led_square_dim_from_args();
-    let rows = dim * dim;
-    let cols = dim * dim;
+    let rows = dim;
+    let cols = dim;
 
     let half_cols = (cols as f64/2_f64).floor();
     let half_rows = (rows as f64/2_f64).floor();

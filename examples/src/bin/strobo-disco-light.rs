@@ -8,7 +8,8 @@ use ws2818_rgb_led_spi_driver::encoding::encode_rgb;
 use ws2818_rgb_led_spi_driver::adapter::WS28xxAdapter;
 
 const FREQUENCY: u64 = 12; // in Hz
-const FLASH_TIME_MS: u64 = 1;
+// experiments showed that below 3ms not all RGBs flash properly;
+const FLASH_TIME_MS: u64 = 3;
 
 // Strobo light effect like in disco
 // see https://en.wikipedia.org/wiki/Strobe_light

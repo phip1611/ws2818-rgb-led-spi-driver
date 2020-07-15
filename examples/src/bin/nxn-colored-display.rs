@@ -12,8 +12,8 @@ fn main() {
     println!("make sure you have \"SPI\" on your Pi enabled and that MOSI-Pin is connected with DIN-Pin!");
     let mut adapter = WS28xxAdapter::new("/dev/spidev0.0").unwrap();
     let dim = get_led_square_dim_from_args();
-    let rows = dim * dim;
-    let cols = dim * dim;
+    let rows = dim;
+    let cols = dim;
     let leds = cols * rows;
     let leds_f64 = leds as f64;
 
