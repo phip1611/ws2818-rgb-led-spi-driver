@@ -36,19 +36,32 @@ Have a look into the examples/code for further explications. :)
 See https://github.com/phip1611/ws2818-rgb-led-spi-driver/tree/master/examples. 
 
 ```
-use std::io::Write;
 use ws2818_rgb_led_spi_driver::encoding::{encode_rgb};
+use ws2818_rgb_led_spi_driver::adapter::WS28xxAdapter;
 
 fn main() {
-    println!("Make sure to have \"SPI\" on your Pi enabled and that MOSI-Pin is connected with DIN-Pin!");
-    let mut spi = ws2818_rgb_led_spi_driver::setup_spi("/dev/spidev0.0").unwrap();
+    println!("make sure you have \"SPI\" on your Pi enabled and that MOSI-Pin is connected with DIN-Pin!");
+    let mut adapter = WS28xxAdapter::new("/dev/spidev0.0").unwrap();
 
-    let mut spi_bits = vec![];
-    // set first three pixels to bright red, bright green and bright blue
-    spi_bits.extend_from_slice(&encode_rgb(255, 0, 0));
-    spi_bits.extend_from_slice(&encode_rgb(0, 255, 0));
-    spi_bits.extend_from_slice(&encode_rgb(0, 0, 255));
-    spi.write_all(&spi_bits).unwrap();
+    // Method 1: encode first and write in two step (prefered way; better performance)
+    {
+        let mut spi_encoded_rgb_bits = vec![];
+        // set first three pixels to bright red, bright green and bright blue
+        spi_encoded_rgb_bits.extend_from_slice(&encode_rgb(255, 0, 0));
+        spi_encoded_rgb_bits.extend_from_slice(&encode_rgb(0, 255, 0));
+        spi_encoded_rgb_bits.extend_from_slice(&encode_rgb(0, 0, 255));
+        adapter.write_encoded_rgb(&spi_encoded_rgb_bits).unwrap();
+    }
+
+    // Method 2: encode and write in one step
+    {
+        let mut rgb_values = vec![];
+        // set first three pixels to bright red, bright green and bright blue
+        rgb_values.push((255, 0, 0));
+        rgb_values.push((0, 255, 0));
+        rgb_values.push((0, 0, 255));
+        adapter.write_rgb(&rgb_values).unwrap();
+    }
 }
 ```
 

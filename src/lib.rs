@@ -1,8 +1,5 @@
-mod setup;
-pub use setup::setup_spi;
-// Reexport
-pub use setup::Spidev;
+//! Exports all sub modules of the WS28xx SPI driver lib.
 
+pub mod adapter;
 pub mod timings;
-pub mod util;
 pub mod encoding;

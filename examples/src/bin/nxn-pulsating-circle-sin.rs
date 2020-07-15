@@ -1,36 +1,47 @@
 //! Example that definitely works on Raspberry Pi. I used a 8x8 RGB LED matrix.
-//! Make sure to have "SPI" on your Pi enabled and that MOSI-Pin is connected
+//! make sure you have "SPI" on your Pi enabled and that MOSI-Pin is connected
 //! with DIN-Pin. You just need DIN pin, no clock. WS2818 uses one-wire-protocol.
 //! See the specification for details
 
-use std::io::Write;
-
-use ws2818_examples::sleep_busy_waiting;
-use ws2818_rgb_led_spi_driver::encoding::{encode_rgb, encode_rgb_vec};
-use ws2818_rgb_led_spi_driver::util::clear_leds;
+use ws2818_examples::{sleep_busy_waiting, get_led_square_dim_from_args};
+use ws2818_rgb_led_spi_driver::encoding::{encode_rgb};
 use std::f64::consts::PI;
-use std::path::Component::RootDir;
-
-const COLS: usize = 8;
-const ROWS: usize = 8;
+use ws2818_rgb_led_spi_driver::adapter::WS28xxAdapter;
 
 // This example uses sinus and cosines to let a growing circle flow through your LED matrix.
 // It looks best on 64x64 displays and more. It calculates all coordinates using sin and cos
 // and tries to map the coordinates to the LED matrix.
 fn main() {
-    println!("Make sure to have \"SPI\" on your Pi enabled and that MOSI-Pin is connected with DIN-Pin!");
-    let mut spi = ws2818_rgb_led_spi_driver::setup_spi("/dev/spidev0.0").unwrap();
+    println!("make sure you have \"SPI\" on your Pi enabled and that MOSI-Pin is connected with DIN-Pin!");
+    let mut adapter = WS28xxAdapter::new("/dev/spidev0.0").unwrap();
 
-    let half_cols = (COLS as f64/2_f64).floor();
-    let half_rows = (ROWS as f64/2_f64).floor();
+    let dim = get_led_square_dim_from_args();
+    let rows = dim * dim;
+    let cols = dim * dim;
+
+    let half_cols = (cols as f64/2_f64).floor();
+    let half_rows = (rows as f64/2_f64).floor();
 
     let mut reverse_dir = true;
     loop {
         reverse_dir = !reverse_dir;
-        for mut factor in 0..ROWS/2 {
+        for factor in 0..rows /2 {
 
-            let mut rgb_matrix = [[(0, 0, 0); COLS]; ROWS];
-            let mut char_matrix = [[' '; COLS]; ROWS];
+            let mut rgb_matrix = vec![];
+            // useful for debugging
+            let mut char_matrix = vec![];
+            for _ in 0..rows {
+                let mut rgb_row_vec = vec![];
+                let mut char_row_vec = vec![];
+                for _ in 0..cols {
+                    rgb_row_vec.push((0, 0, 0));
+                    // useful for debugging
+                    char_row_vec.push(' ');
+                }
+                rgb_matrix.push(rgb_row_vec);
+                char_matrix.push(char_row_vec);
+            }
+
             for angle_deg in 0..360 {
                 let (x_coord, y_coord) = calc_coordinates(angle_deg, factor);
 
@@ -43,7 +54,7 @@ fn main() {
                 let matrix_i = (-y_coord + half_rows) as usize;
                 let matrix_j = (x_coord + half_cols) as usize;
 
-                if matrix_i < ROWS && matrix_j < COLS {
+                if matrix_i < rows && matrix_j < cols {
                     char_matrix[matrix_i][matrix_j] = 'X';
                     if factor % 3 == 0 {
                         rgb_matrix[matrix_i][matrix_j] = (60, 0, 0);
@@ -71,7 +82,7 @@ fn main() {
                 });
             });
 
-            spi.write_all(&transfer_bits_vec);
+            adapter.write_encoded_rgb(&transfer_bits_vec).unwrap();
             sleep_busy_waiting(100);
         }
     }

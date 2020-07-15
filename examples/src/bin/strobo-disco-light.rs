@@ -1,12 +1,11 @@
 //! Example that definitely works on Raspberry Pi. I used a 8x8 RGB LED matrix.
-//! Make sure to have "SPI" on your Pi enabled and that MOSI-Pin is connected
+//! make sure you have "SPI" on your Pi enabled and that MOSI-Pin is connected
 //! with DIN-Pin. You just need DIN pin, no clock. WS2818 uses one-wire-protocol.
 //! See the specification for details
 
-use std::io::Write;
-
-use ws2818_examples::sleep_busy_waiting;
+use ws2818_examples::{sleep_busy_waiting, get_led_num_from_args};
 use ws2818_rgb_led_spi_driver::encoding::encode_rgb;
+use ws2818_rgb_led_spi_driver::adapter::WS28xxAdapter;
 
 const FREQUENCY: u64 = 12; // in Hz
 const FLASH_TIME_MS: u64 = 1;
@@ -14,17 +13,18 @@ const FLASH_TIME_MS: u64 = 1;
 // Strobo light effect like in disco
 // see https://en.wikipedia.org/wiki/Strobe_light
 fn main() {
-    println!("Make sure to have \"SPI\" on your Pi enabled and that MOSI-Pin is connected with DIN-Pin!");
-    let mut spi = ws2818_rgb_led_spi_driver::setup_spi("/dev/spidev0.0").unwrap();
+    println!("make sure you have \"SPI\" on your Pi enabled and that MOSI-Pin is connected with DIN-Pin!");
+    let mut adapter = WS28xxAdapter::new("/dev/spidev0.0").unwrap();
+    let num_leds = get_led_num_from_args();
 
     let mut white_display_bytes = vec![];
     // strobo effekt
-    for _ in 0..64 {
+    for _ in 0..num_leds {
         white_display_bytes.extend_from_slice(&encode_rgb(255, 255, 255));
     }
 
     let mut empty_display_bytes = vec![];
-    for _ in 0..64 {
+    for _ in 0..num_leds {
         empty_display_bytes.extend_from_slice(&encode_rgb(0, 0, 0));
     }
 
@@ -32,9 +32,9 @@ fn main() {
     // note we first aggregate all data and write then all at
     // once! otherwise timings would be impossible to reach
     loop {
-        spi.write_all(&white_display_bytes).unwrap();
+        adapter.write_encoded_rgb(&white_display_bytes).unwrap();
         sleep_busy_waiting(FLASH_TIME_MS);
-        spi.write_all(&empty_display_bytes).unwrap();
+        adapter.write_encoded_rgb(&empty_display_bytes).unwrap();
         sleep_busy_waiting((1000 / FREQUENCY) - FLASH_TIME_MS);
     }
 }
