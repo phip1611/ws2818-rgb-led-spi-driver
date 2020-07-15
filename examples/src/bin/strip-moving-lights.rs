@@ -26,7 +26,7 @@ fn main() {
             next_light_time = now.add(Duration::from_secs(1))
         }
         anim.shift_all_pixels();
-        adapter.write_rgb(&anim.rgb_data).unwrap();
+        adapter.write_rgb(&anim.rgb_data[MOVING_LIGHT_IMPULSE_LEN..]).unwrap();
         sleep_busy_waiting_ms(FREQUENCY_MS);
     }
 }
