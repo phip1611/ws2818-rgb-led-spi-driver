@@ -1,26 +1,23 @@
-//! Example that definitely works on Raspberry Pi. I used a 8x8 RGB LED matrix.
-//! Make sure to have "SPI" on your Pi enabled and that MOSI-Pin is connected
+//! Example that definitely works on Raspberry Pi.
+//! Make sure you have "SPI" on your Pi enabled and that MOSI-Pin is connected
 //! with DIN-Pin. You just need DIN pin, no clock. WS2818 uses one-wire-protocol.
 //! See the specification for details
 
-use std::io::Write;
+use ws2818_examples::{sleep_busy_waiting_ms, get_led_square_dim_from_args};
+use ws2818_rgb_led_spi_driver::encoding::{encode_rgb};
+use ws2818_rgb_led_spi_driver::adapter::WS28xxAdapter;
 
-use ws2818_examples::sleep_busy_waiting;
-use ws2818_rgb_led_spi_driver::encoding::{encode_rgb, encode_rgb_vec};
-use ws2818_rgb_led_spi_driver::util::clear_leds;
-use std::f64::consts::PI;
-use std::path::Component::RootDir;
-
-const DIM: usize = 8;
 const BRIGHTNESS_FACTOR: f64 = 0.2;
 
 // This example let a square flow though a quare led matrix.
 fn main() {
-    println!("Make sure to have \"SPI\" on your Pi enabled and that MOSI-Pin is connected with DIN-Pin!");
-    let mut spi = ws2818_rgb_led_spi_driver::setup_spi("/dev/spidev0.0").unwrap();
+    println!("make sure you have \"SPI\" on your Pi enabled and that MOSI-Pin is connected with DIN-Pin!");
+    let mut adapter = WS28xxAdapter::new("/dev/spidev0.0").unwrap();
+    let dim = get_led_square_dim_from_args();
+    let _num_leds = dim * dim;
 
     let mut reverse_dir = true;
-    let half_dim = DIM / 2;
+    let half_dim = dim / 2;
     let (mut r, mut g, mut b) = (255/3, 255/3 * 2, 255);
     loop {
         reverse_dir = !reverse_dir;
@@ -39,16 +36,28 @@ fn main() {
                 size = half_dim + 1 - 1 -size;
             }
 
-            let mut rgb_matrix = [[(0, 0, 0); DIM]; DIM];
+            let mut rgb_matrix = vec![];
             // useful for debugging
-            let mut char_matrix = [[' '; DIM]; DIM];
+            let mut char_matrix = vec![];
+            for _ in 0..dim {
+                let mut rgb_row_vec = vec![];
+                let mut char_row_vec = vec![];
+                for _ in 0..dim {
+                    rgb_row_vec.push((0, 0, 0));
+                    // useful for debugging
+                    char_row_vec.push(' ');
+                }
+                rgb_matrix.push(rgb_row_vec);
+                char_matrix.push(char_row_vec);
+            }
+
             if size > 0 {
                 let active_leds_per_active_line = 2 * size;
 
                 let top_l_i = 0 + half_dim - size;
                 let top_l_j = top_l_i;
-                let bottom_r_i = DIM - 1 - half_dim + size;
-                let bottom_r_j = bottom_r_i;
+                let bottom_r_i = dim - 1 - half_dim + size;
+                let _bottom_r_j = bottom_r_i;
 
                 for i in 0..active_leds_per_active_line {
                     // top horizontal lane
@@ -66,7 +75,7 @@ fn main() {
                     char_matrix[top_l_j + i][top_l_i] = 'X';
                 }
                 // i don't know why tho but it works xD
-                let active_leds_per_active_line = if DIM % 2 == 0 { active_leds_per_active_line } else { active_leds_per_active_line + 1 };
+                let active_leds_per_active_line = if dim % 2 == 0 { active_leds_per_active_line } else { active_leds_per_active_line + 1 };
                 for i in 0..active_leds_per_active_line {
                     // right vertical lane
                     rgb_matrix[top_l_j + i][bottom_r_i] = rgb;
@@ -82,24 +91,13 @@ fn main() {
                     );
                 });
             });
-            spi.write_all(&transfer_bits_vec);
+            adapter.write_encoded_rgb(&transfer_bits_vec).unwrap();
             /*char_matrix.iter().for_each(|row| {
                 println!("{:?}", row);
             });*/
-            sleep_busy_waiting(50);
+            sleep_busy_waiting_ms(50);
         }
     }
-}
-
-/// Returns (x,y) (or (x,f(x)) coordinates for a specific angle and it's sinus.
-fn calc_coordinates(angle_deg: usize, factor: usize) -> (f64, f64) {
-    let angle_rad = PI / 180_f64 * (angle_deg as f64);
-    let x_coord = angle_rad.cos();
-    let y_coord = angle_rad.sin();
-    // https://www.geogebra.org/resource/NngvpTKr/iYIkiJEV1NSLJEri/material-NngvpTKr.png
-    let x_coord = x_coord * factor as f64;
-    let y_coord = y_coord * factor as f64;
-    (x_coord, y_coord)
 }
 
 #[cfg(test)]

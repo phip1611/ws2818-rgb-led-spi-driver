@@ -49,7 +49,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "ws2818-rgb-led-spi-driver"
-version = "0.1.5"
+version = "1.0.0"
 dependencies = [
  "spidev 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]

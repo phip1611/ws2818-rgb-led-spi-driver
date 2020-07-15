@@ -9,3 +9,4 @@ publish = false
 
 [dependencies]
 ws2818-rgb-led-spi-driver = { path = "../" }
+rand = "0.7.3"
