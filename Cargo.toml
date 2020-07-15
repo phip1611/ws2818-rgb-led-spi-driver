@@ -8,7 +8,7 @@ exclude = [
     "examples",
     ".travis.yml",
 ]
-keywords = ["gpio", "spi", "ws2811", "ws2812", "ws2818", "neopixel"]
+keywords = ["spi", "ws2811", "ws2812", "ws2818", "neopixel"]
 categories = ["hardware-support"]
 readme = "README.md"
 license = "MIT"
