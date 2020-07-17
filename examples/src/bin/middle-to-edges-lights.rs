@@ -26,7 +26,7 @@ fn main() {
             next_light_time = now.add(Duration::from_secs(1))
         }
         anim.shift_all_pixels();
-        adapter.write_rgb(&anim.rgb_strip_vec_data[MOVING_LIGHT_IMPULSE_LEN..]).unwrap();
+        adapter.write_rgb(&anim.rgb_strip_vec_data).unwrap();
         sleep_busy_waiting_ms(FREQUENCY_MS);
     }
 }
@@ -41,9 +41,10 @@ pub struct MovingLightStripsAnimation {
 
 impl MovingLightStripsAnimation {
     pub fn new(mut led_count: usize) -> Self {
-        if led_count % 2 != 1 {
-            led_count = (led_count / 2) + 1;
+        if led_count % 2 != 0 {
+            led_count = led_count + 1;
         }
+
         MovingLightStripsAnimation {
             led_count,
             rgb_strip_vec_data: vec![(0, 0, 0); led_count],
