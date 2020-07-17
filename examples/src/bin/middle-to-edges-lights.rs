@@ -82,7 +82,7 @@ impl MovingLightStripsAnimation {
     fn shift_all_pixels(&mut self) {
         for i in 0..self.led_count / 2 {
             let i_left = i;
-            let i_right = self.led_count - i;
+            let i_right = self.led_count - 1 - i;
 
             if i_left + 1 == i_right {
                 // genau dann in der mitte
