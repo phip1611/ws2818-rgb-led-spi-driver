@@ -87,13 +87,13 @@ impl MovingLightStripsAnimation {
             if i_right - i_left == 1 {
                 // genau dann in der mitte
                 let new = self.new_rgb_data_vec.last().unwrap().clone();
-                std::mem::replace(&mut self.rgb_data[i_left], new);
-                std::mem::replace(&mut self.rgb_data[i_right], new);
+                std::mem::replace(&mut self.rgb_strip_vec_data[i_left], new);
+                std::mem::replace(&mut self.rgb_strip_vec_data[i_right], new);
             } else {
                 let prev_left = self.rgb_data[i_left + 1].clone();
-                std::mem::replace(&mut self.rgb_data[i_left], prev_left);
+                std::mem::replace(&mut self.rgb_strip_vec_data[i_left], prev_left);
                 let prev_right = self.rgb_data[i_right - 1].clone();
-                std::mem::replace(&mut self.rgb_data[i_right], prev_right);
+                std::mem::replace(&mut self.rgb_strip_vec_data[i_right], prev_right);
             }
         }
 
