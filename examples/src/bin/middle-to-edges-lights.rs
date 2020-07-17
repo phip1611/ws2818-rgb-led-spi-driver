@@ -84,7 +84,7 @@ impl MovingLightStripsAnimation {
             let i_left = i;
             let i_right = self.led_count - i;
 
-            if i_left - i_right == 1 {
+            if i_left + 1 == i_right {
                 // genau dann in der mitte
                 let new = self.new_rgb_data_vec.last().unwrap().clone();
                 std::mem::replace(&mut self.rgb_strip_vec_data[i_left], new);
