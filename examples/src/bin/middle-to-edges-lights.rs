@@ -90,9 +90,9 @@ impl MovingLightStripsAnimation {
                 std::mem::replace(&mut self.rgb_strip_vec_data[i_left], new);
                 std::mem::replace(&mut self.rgb_strip_vec_data[i_right], new);
             } else {
-                let prev_left = self.rgb_data[i_left + 1].clone();
+                let prev_left = self.rgb_strip_vec_data[i_left + 1].clone();
                 std::mem::replace(&mut self.rgb_strip_vec_data[i_left], prev_left);
-                let prev_right = self.rgb_data[i_right - 1].clone();
+                let prev_right = self.rgb_strip_vec_data[i_right - 1].clone();
                 std::mem::replace(&mut self.rgb_strip_vec_data[i_right], prev_right);
             }
         }
@@ -103,7 +103,7 @@ impl MovingLightStripsAnimation {
             if i == 0 {
                 std::mem::replace(&mut self.new_rgb_data_vec[i], (0, 0, 0));
             } else {
-                let prev = self.rgb_data[i - 1].clone();
+                let prev = self.new_rgb_data_vec[i - 1].clone();
 
                 std::mem::replace(&mut self.new_rgb_data_vec[i], prev);
             }
