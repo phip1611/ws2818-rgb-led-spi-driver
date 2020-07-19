@@ -8,7 +8,7 @@ use ws2818_rgb_led_spi_driver::adapter::WS28xxAdapter;
 use std::time::{Instant, Duration};
 use std::ops::Add;
 
-pub const FREQUENCY: u64 = 20; // 30 Hz
+pub const FREQUENCY: u64 = 20; // in Hz
 pub const FREQUENCY_MS: u64 = 1000 / FREQUENCY;
 
 // This animations sends animated colored light strips from the middle to the strip to the edges.
