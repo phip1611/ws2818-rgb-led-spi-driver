@@ -1,5 +1,6 @@
 use std::time::{Instant, Duration};
 use std::ops::Add;
+use std::process::exit;
 
 #[inline(always)]
 pub fn sleep_busy_waiting_ms(ms: u64) {
@@ -27,6 +28,25 @@ pub fn get_led_num_from_args() -> usize {
     // Default
     println!("Using 64 LEDs");
     64
+}
+
+/// Returns n from args or default.
+pub fn get_led_num_and_color_from_args() -> (usize, u8, u8, u8) {
+    println!(
+        "You can provide the number of LEDs and the color as arguments when calling from command line.\
+        For example \"cargo run --bin <bin> 64 255 255 255\"."
+    );
+    let args = std::env::args().collect::<Vec<String>>();
+    if args.len() == 5 {
+        let leds = args[1].parse::<usize>().unwrap();
+        let r = args[2].parse::<u8>().unwrap();
+        let g = args[3].parse::<u8>().unwrap();
+        let b = args[4].parse::<u8>().unwrap();
+        (leds, r, g, b)
+    } else {
+        exit(1);
+    }
+
 }
 
 /// Returns n for n x n matrix from args or default.
