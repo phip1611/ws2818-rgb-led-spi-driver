@@ -5,12 +5,13 @@
 
 use ws2818_examples::{sleep_busy_waiting_ms, get_led_num_from_args};
 use ws2818_rgb_led_spi_driver::encoding::encode_rgb;
-use ws2818_rgb_led_spi_driver::adapter::WS28xxAdapter;
+use ws2818_rgb_led_spi_driver::adapter_spi::WS28xxSpiAdapter;
+use ws2818_rgb_led_spi_driver::adapter_gen::WS28xxAdapter;
 
 // Example that shows a single moving pixel though the 8x8 led matrix.
 fn main() {
     println!("make sure you have \"SPI\" on your Pi enabled and that MOSI-Pin is connected with DIN-Pin!");
-    let mut adapter = WS28xxAdapter::new("/dev/spidev0.0").unwrap();
+    let mut adapter = WS28xxSpiAdapter::new("/dev/spidev0.0").unwrap();
     let num_leds = get_led_num_from_args();
 
     // note we first aggregate all data and write then all at

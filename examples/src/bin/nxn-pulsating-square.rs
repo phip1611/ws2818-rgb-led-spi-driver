@@ -5,14 +5,15 @@
 
 use ws2818_examples::{sleep_busy_waiting_ms, get_led_square_dim_from_args};
 use ws2818_rgb_led_spi_driver::encoding::{encode_rgb};
-use ws2818_rgb_led_spi_driver::adapter::WS28xxAdapter;
+use ws2818_rgb_led_spi_driver::adapter_spi::WS28xxSpiAdapter;
+use ws2818_rgb_led_spi_driver::adapter_gen::WS28xxAdapter;
 
 const BRIGHTNESS_FACTOR: f64 = 0.2;
 
 // This example let a square flow though a quare led matrix.
 fn main() {
     println!("make sure you have \"SPI\" on your Pi enabled and that MOSI-Pin is connected with DIN-Pin!");
-    let mut adapter = WS28xxAdapter::new("/dev/spidev0.0").unwrap();
+    let mut adapter = WS28xxSpiAdapter::new("/dev/spidev0.0").unwrap();
     let dim = get_led_square_dim_from_args();
     let _num_leds = dim * dim;
 
@@ -97,18 +98,5 @@ fn main() {
             });*/
             sleep_busy_waiting_ms(50);
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test() {
-        assert_eq!((10, 0), calc_coordinates(0, 10));
-        assert_eq!((0, 10), calc_coordinates(90, 10));
-        assert_eq!((-10, 0), calc_coordinates(180, 10));
-        assert_eq!((0, -10), calc_coordinates(270, 10));
     }
 }

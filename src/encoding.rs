@@ -1,6 +1,10 @@
 //! Utility functions for the encoding of data. This functions respect the restrictions from `timings`-module.
+//! This whole module works with and only with a frequency of [`crate::timings::PI_SPI_HZ`]. If you can't
+//! use the optional spidev-feature then take this as a template and build your own encoding functions.
+//! So far this file and it's functions are static and not dynamic.
 
 use crate::timings::encoding::{SPI_BYTES_PER_DATA_BIT, WS2812_LOGICAL_ZERO_BYTES, WS2812_LOGICAL_ONE_BYTES};
+use alloc::vec::Vec;
 
 const COLORS: usize = 3; // r, g, b
 const BITS_PER_COLOR: usize = 8; // 0 to 255

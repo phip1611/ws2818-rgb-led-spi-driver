@@ -5,12 +5,13 @@
 
 use ws2818_examples::{sleep_busy_waiting_ms, get_led_square_dim_from_args};
 use ws2818_rgb_led_spi_driver::encoding::{encode_rgb_slice};
-use ws2818_rgb_led_spi_driver::adapter::WS28xxAdapter;
+use ws2818_rgb_led_spi_driver::adapter_spi::WS28xxSpiAdapter;
+use ws2818_rgb_led_spi_driver::adapter_gen::WS28xxAdapter;
 
 // Some colored animation on a 8x8 led matrix.
 fn main() {
     println!("make sure you have \"SPI\" on your Pi enabled and that MOSI-Pin is connected with DIN-Pin!");
-    let mut adapter = WS28xxAdapter::new("/dev/spidev0.0").unwrap();
+    let mut adapter = WS28xxSpiAdapter::new("/dev/spidev0.0").unwrap();
     let dim = get_led_square_dim_from_args();
     let rows = dim;
     let cols = dim;

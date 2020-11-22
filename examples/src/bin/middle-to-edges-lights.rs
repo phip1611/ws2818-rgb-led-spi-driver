@@ -4,9 +4,10 @@
 //! See the specification for details
 
 use ws2818_examples::{get_led_num_from_args, darken_rgb, get_random_pixel_val, sleep_busy_waiting_ms};
-use ws2818_rgb_led_spi_driver::adapter::WS28xxAdapter;
 use std::time::{Instant, Duration};
 use std::ops::Add;
+use ws2818_rgb_led_spi_driver::adapter_spi::WS28xxSpiAdapter;
+use ws2818_rgb_led_spi_driver::adapter_gen::WS28xxAdapter;
 
 pub const FREQUENCY: u64 = 20; // in Hz
 pub const FREQUENCY_MS: u64 = 1000 / FREQUENCY;
@@ -14,7 +15,7 @@ pub const FREQUENCY_MS: u64 = 1000 / FREQUENCY;
 // This animations sends animated colored light strips from the middle to the strip to the edges.
 fn main() {
     println!("make sure you have \"SPI\" on your Pi enabled and that MOSI-Pin is connected with DIN-Pin!");
-    let mut adapter = WS28xxAdapter::new("/dev/spidev0.0").unwrap();
+    let mut adapter = WS28xxSpiAdapter::new("/dev/spidev0.0").unwrap();
     let num_leds = get_led_num_from_args();
     let mut anim = MovingLightStripsAnimation::new(num_leds);
 

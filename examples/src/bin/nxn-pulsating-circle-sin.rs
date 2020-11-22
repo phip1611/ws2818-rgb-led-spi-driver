@@ -6,7 +6,8 @@
 use ws2818_examples::{sleep_busy_waiting_ms, get_led_square_dim_from_args};
 use ws2818_rgb_led_spi_driver::encoding::{encode_rgb};
 use std::f64::consts::PI;
-use ws2818_rgb_led_spi_driver::adapter::WS28xxAdapter;
+use ws2818_rgb_led_spi_driver::adapter_spi::WS28xxSpiAdapter;
+use ws2818_rgb_led_spi_driver::adapter_gen::WS28xxAdapter;
 
 // This example uses sinus and cosines to let a growing circle flow through your LED matrix.
 // It looks best on 64x64 displays and more. It calculates all coordinates using sin and cos
@@ -15,7 +16,7 @@ use ws2818_rgb_led_spi_driver::adapter::WS28xxAdapter;
 // edit: there is still a bug somewhere and because of this it looks weird :/
 fn main() {
     println!("make sure you have \"SPI\" on your Pi enabled and that MOSI-Pin is connected with DIN-Pin!");
-    let mut adapter = WS28xxAdapter::new("/dev/spidev0.0").unwrap();
+    let mut adapter = WS28xxSpiAdapter::new("/dev/spidev0.0").unwrap();
 
     let dim = get_led_square_dim_from_args();
     let rows = dim;
