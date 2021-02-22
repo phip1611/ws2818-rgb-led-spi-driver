@@ -19,4 +19,4 @@ documentation = "https://docs.rs/ws2818-rgb-led-spi-driver/"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-spidev = "0.4.0"
+spidev = "0.4.1"
