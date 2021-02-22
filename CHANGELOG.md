@@ -1,5 +1,8 @@
+# 1.0.1
+Updated to SpiDev 0.4.1.
+
 # 1.0.0
-Don't expose SpiDev rate anymore. There is now a nice wrapper struct called `WS28xxAdapter`.
+Don't expose SpiDev anymore. There is now a nice wrapper struct called `WS28xxAdapter`.
 New minimal code:
 
 ```
