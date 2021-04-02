@@ -1,6 +1,6 @@
 //! Utility functions for the encoding of data. This functions respect the restrictions from `timings`-module.
 //! This whole module works with and only with a frequency of [`crate::timings::PI_SPI_HZ`]. If you can't
-//! use the optional spidev-feature then take this as a template and build your own encoding functions.
+//! use the optional "adapter_spidev"-feature then take this as a template and build your own encoding functions.
 //! So far this file and it's functions are static and not dynamic.
 
 use crate::timings::encoding::{SPI_BYTES_PER_DATA_BIT, WS2812_LOGICAL_ZERO_BYTES, WS2812_LOGICAL_ONE_BYTES};
@@ -14,11 +14,11 @@ pub const SPI_BYTES_PER_RGB_PIXEL: usize = COLORS * BITS_PER_COLOR * SPI_BYTES_P
 
 /// Encodes RGB-Values to the bytes that must be transferred via SPI MOSI.
 /// These SPI bytes represent the logical zeros and ones for WS2818.
-/// This counts in the constraints that come from `crate::timings`-module.
+/// This counts in the constraints that come from [`crate::timings`]-module.
 /// Due to the specification the data is send this way:
 /// G7..G0,R7..R0,B7..B0
 ///
-/// The resulting is `BYTES_PER_RGB_PIXEL` bytes long.
+/// The resulting is [`SPI_BYTES_PER_RGB_PIXEL`] bytes long.
 pub fn encode_rgb(r: u8, g: u8, b: u8) -> [u8; SPI_BYTES_PER_RGB_PIXEL] {
     let mut spi_bytes: [u8; SPI_BYTES_PER_RGB_PIXEL] = [0; SPI_BYTES_PER_RGB_PIXEL];
     let mut spi_bytes_i = 0;
@@ -43,7 +43,7 @@ pub fn encode_rgb(r: u8, g: u8, b: u8) -> [u8; SPI_BYTES_PER_RGB_PIXEL] {
     spi_bytes
 }
 
-/// Encodes multiple RGB values in a slice. Uses `encode_rgb()` for each value.
+/// Encodes multiple RGB values in a slice. Uses [`encode_rgb`] for each value.
 pub fn encode_rgb_slice(data: &[(u8, u8, u8)]) -> Vec<u8> {
     let mut bytes = vec![];
     data.iter().for_each(|rgb| {

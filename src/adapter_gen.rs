@@ -1,18 +1,18 @@
-//! Adapter
+//! Generic Hardware Abstraction Layer, no_std-compatible.
 
 use crate::encoding::encode_rgb_slice;
 use alloc::string::String;
 use alloc::boxed::Box;
 
+/// SPI-device abstraction.
 pub trait HardwareDev {
     fn write_all(&mut self, encoded_data: &[u8]) -> Result<(), String>;
 }
 
 pub trait WS28xxAdapter {
 
+    /// Returns a reference to the hardware device.
     /// This function only needs to be implemented once in the generic adapter.
-    /// TODO is there a better design?! I need to access this function in the
-    ///  other functions of the trait to get the HardwareDev-property.
     fn get_hw_dev(&mut self) -> &mut Box<dyn HardwareDev>;
 
     /// Encodes RGB values and write them via the hardware device to the LEDs. The length of the vector
@@ -33,8 +33,8 @@ pub trait WS28xxAdapter {
     }
 
     /// Directly writes encoded RGB values via hardware device to the LEDs. This method and the encoded data
-    /// must fulfill the restrictions given by `crate::timings` and `crate::encoding` if the hardware
-    /// device uses the specified frequency in `[crate::timings::PI_SPI_HZ]`.
+    /// must fulfill the restrictions given by [`crate::timings`] and [`crate::encoding`] if the hardware
+    /// device uses the specified frequency in [`crate::timings::PI_SPI_HZ`].
     fn write_encoded_rgb(&mut self, encoded_data: &[u8]) -> Result<(), String> {
         self.get_hw_dev().write_all(&encoded_data)
             .map_err(|_| {
@@ -48,15 +48,15 @@ pub trait WS28xxAdapter {
 }
 
 /// Platform agnostic (generic) adapter that connects your application via your specified
-/// hardware interface to your WS28xx LEDs. It offers associated functions that
-/// are convenient to read RGB data. This works with `#[no-std]`.
+/// hardware interface to your WS28xx LEDs. *Handle this as something like an abstract class
+/// for concrete implementations!* This works in `#[no-std]`-environments.
 pub struct WS28xxGenAdapter {
     hw: Box<dyn HardwareDev>,
 }
 
 impl WS28xxGenAdapter {
 
-    /// Constructor.
+    /// Constructor that stores the hardware device in the adapter.
     pub fn new(hw: Box<dyn HardwareDev>) -> Self {
         Self {
             hw
@@ -64,7 +64,7 @@ impl WS28xxGenAdapter {
     }
 }
 
-// make sure all convenient functions are available on the generic adapter.
+// Implement the getter for the hardware device.
 impl WS28xxAdapter for WS28xxGenAdapter {
     fn get_hw_dev(&mut self) -> &mut Box<dyn HardwareDev> {
         &mut self.hw

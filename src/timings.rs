@@ -8,8 +8,9 @@
 //!
 //! See device specification for further details.
 
-/// The Frequency for the SPI device that should be used. While this was developed I focused
-/// on Raspberry Pi. Works on other Linux systems with SPI device probably too.
+/// The frequency for the SPI device that should be used. While this was developed I focused
+/// on Raspberry Pi. Works on other Linux systems with SPI device probably too if they have
+/// a similar frequency. Otherwise you may need to change the values in `encoding.rs`.
 pub const PI_SPI_HZ: u32 = 15_600_000; // 15.6 Mhz
 // see https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md
 
