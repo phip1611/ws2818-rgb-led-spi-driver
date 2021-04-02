@@ -6,7 +6,7 @@ script:
   - rustup target add thumbv7em-none-eabihf # some embedded ARM chip
   - rustup target add armv7-unknown-linux-gnueabihf # Raspberry Pi
   - rustup target add x86_64-unknown-linux-gnu # regular Linux
-  - cargo check --all-targets --target thumbv7em-none-eabihf --no-default-features # some embedded ARM chip; no_std
-  - cargo check --all-targets --target armv7-unknown-linux-gnueabihf # raspberry Pi
-  - cargo build --all-targets --target x86_64-unknown-linux-gnu # regular linux; also in CI
+  - cargo check --target thumbv7em-none-eabihf --no-default-features # some embedded ARM chip; no_std
+  - cargo check --target armv7-unknown-linux-gnueabihf # raspberry Pi
+  - cargo build --target x86_64-unknown-linux-gnu # regular linux; also in CI
   - cargo test --all-targets --target x86_64-unknown-linux-gnu # regular linux; also in CI
