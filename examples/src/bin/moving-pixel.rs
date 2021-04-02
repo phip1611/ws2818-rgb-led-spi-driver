@@ -3,10 +3,10 @@
 //! with DIN-Pin. You just need DIN pin, no clock. WS2818 uses one-wire-protocol.
 //! See the specification for details
 
-use ws2818_examples::{sleep_busy_waiting_ms, get_led_num_from_args};
-use ws2818_rgb_led_spi_driver::encoding::encode_rgb;
-use ws2818_rgb_led_spi_driver::adapter_spi::WS28xxSpiAdapter;
+use ws2818_examples::{get_led_num_from_args, sleep_busy_waiting_ms};
 use ws2818_rgb_led_spi_driver::adapter_gen::WS28xxAdapter;
+use ws2818_rgb_led_spi_driver::adapter_spi::WS28xxSpiAdapter;
+use ws2818_rgb_led_spi_driver::encoding::encode_rgb;
 
 // Example that shows a single moving pixel though the 8x8 led matrix.
 fn main() {
@@ -16,7 +16,6 @@ fn main() {
 
     // note we first aggregate all data and write then all at
     // once! otherwise timings would be impossible to reach
-
 
     let mut i = 0;
     loop {
@@ -32,7 +31,6 @@ fn main() {
         adapter.write_encoded_rgb(&data).unwrap();
 
         i = (i + 1) % num_leds;
-        sleep_busy_waiting_ms(1000/10); // 100ms / 10Hz
+        sleep_busy_waiting_ms(1000 / 10); // 100ms / 10Hz
     }
-
 }

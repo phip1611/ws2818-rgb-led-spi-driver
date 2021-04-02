@@ -3,11 +3,11 @@
 //! with DIN-Pin. You just need DIN pin, no clock. WS2818 uses one-wire-protocol.
 //! See the specification for details
 
-use ws2818_examples::{sleep_busy_waiting_ms, get_led_square_dim_from_args};
-use ws2818_rgb_led_spi_driver::encoding::{encode_rgb};
 use std::f64::consts::PI;
-use ws2818_rgb_led_spi_driver::adapter_spi::WS28xxSpiAdapter;
+use ws2818_examples::{get_led_square_dim_from_args, sleep_busy_waiting_ms};
 use ws2818_rgb_led_spi_driver::adapter_gen::WS28xxAdapter;
+use ws2818_rgb_led_spi_driver::adapter_spi::WS28xxSpiAdapter;
+use ws2818_rgb_led_spi_driver::encoding::encode_rgb;
 
 // This example uses sinus and cosines to let a growing circle flow through your LED matrix.
 // It looks best on 64x64 displays and more. It calculates all coordinates using sin and cos
@@ -22,14 +22,13 @@ fn main() {
     let rows = dim;
     let cols = dim;
 
-    let half_cols = (cols as f64/2_f64).floor();
-    let half_rows = (rows as f64/2_f64).floor();
+    let half_cols = (cols as f64 / 2_f64).floor();
+    let half_rows = (rows as f64 / 2_f64).floor();
 
     let mut reverse_dir = true;
     loop {
         reverse_dir = !reverse_dir;
-        for factor in 0..rows /2 {
-
+        for factor in 0..rows / 2 {
             let mut rgb_matrix = vec![];
             // useful for debugging
             let mut char_matrix = vec![];
@@ -79,9 +78,11 @@ fn main() {
             let mut transfer_bits_vec: Vec<u8> = vec![];
             rgb_matrix.iter().for_each(|row| {
                 row.iter().for_each(|rgb_value| {
-                    transfer_bits_vec.extend_from_slice(
-                        &encode_rgb(rgb_value.0, rgb_value.1, rgb_value.2 )
-                    );
+                    transfer_bits_vec.extend_from_slice(&encode_rgb(
+                        rgb_value.0,
+                        rgb_value.1,
+                        rgb_value.2,
+                    ));
                 });
             });
 
@@ -93,7 +94,7 @@ fn main() {
 
 /// Returns (x,y) (or (x,f(x)) coordinates for a specific angle and it's sinus.
 fn calc_coordinates(angle_deg: usize, factor: usize) -> (f64, f64) {
-    let angle_rad = PI/180_f64 * (angle_deg as f64);
+    let angle_rad = PI / 180_f64 * (angle_deg as f64);
     let x_coord = angle_rad.cos();
     let y_coord = angle_rad.sin();
     // https://www.geogebra.org/resource/NngvpTKr/iYIkiJEV1NSLJEri/material-NngvpTKr.png

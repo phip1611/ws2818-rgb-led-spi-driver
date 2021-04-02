@@ -1,14 +1,14 @@
 //! Adapter for SPI-dev on Linux-systems. This requires std.
 
-use std::io::Write;
-use std::io;
-use spidev::{SpidevOptions, SpiModeFlags, Spidev};
-use crate::timings::PI_SPI_HZ;
+use crate::adapter_gen::{HardwareDev, WS28xxAdapter, WS28xxGenAdapter};
 use crate::encoding::encode_rgb_slice;
-use alloc::string::{String, ToString};
-use alloc::fmt::format;
-use crate::adapter_gen::{HardwareDev, WS28xxGenAdapter, WS28xxAdapter};
+use crate::timings::PI_SPI_HZ;
 use alloc::boxed::Box;
+use alloc::fmt::format;
+use alloc::string::{String, ToString};
+use spidev::{SpiModeFlags, Spidev, SpidevOptions};
+use std::io;
+use std::io::Write;
 
 /// Wrapper around Spidev.
 struct SpiHwAdapterDev(Spidev);
@@ -64,13 +64,10 @@ impl WS28xxSpiAdapter {
     ///
     /// Fails if connection to SPI can't be established.
     pub fn new(dev: &str) -> Result<Self, String> {
-        let spi = SpiHwAdapterDev::new(dev)
-            .map_err(|err| err.to_string())?;
+        let spi = SpiHwAdapterDev::new(dev).map_err(|err| err.to_string())?;
         let spi = Box::from(spi);
         let gen = WS28xxGenAdapter::new(spi);
-        Ok(Self {
-            gen
-        })
+        Ok(Self { gen })
     }
 }
 

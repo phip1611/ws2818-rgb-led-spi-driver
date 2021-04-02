@@ -3,11 +3,13 @@
 //! with DIN-Pin. You just need DIN pin, no clock. WS2818 uses one-wire-protocol.
 //! See the specification for details
 
-use ws2818_examples::{get_led_num_from_args, darken_rgb, get_random_pixel_val, sleep_busy_waiting_ms};
-use std::time::{Instant, Duration};
 use std::ops::Add;
-use ws2818_rgb_led_spi_driver::adapter_spi::WS28xxSpiAdapter;
+use std::time::{Duration, Instant};
+use ws2818_examples::{
+    darken_rgb, get_led_num_from_args, get_random_pixel_val, sleep_busy_waiting_ms,
+};
 use ws2818_rgb_led_spi_driver::adapter_gen::WS28xxAdapter;
+use ws2818_rgb_led_spi_driver::adapter_spi::WS28xxSpiAdapter;
 
 pub const FREQUENCY: u64 = 20; // 30 Hz
 pub const FREQUENCY_MS: u64 = 1000 / FREQUENCY;
@@ -27,7 +29,9 @@ fn main() {
             next_light_time = now.add(Duration::from_secs(1))
         }
         anim.shift_all_pixels();
-        adapter.write_rgb(&anim.rgb_data[MOVING_LIGHT_IMPULSE_LEN..]).unwrap();
+        adapter
+            .write_rgb(&anim.rgb_data[MOVING_LIGHT_IMPULSE_LEN..])
+            .unwrap();
         sleep_busy_waiting_ms(FREQUENCY_MS);
     }
 }
@@ -47,7 +51,6 @@ impl MovingLightStripsAnimation {
 }
 
 impl MovingLightStripsAnimation {
-
     /// Shifts all pixel to the next position. Beginning is filled
     /// with black (0, 0, 0).
     fn shift_all_pixels(&mut self) {
@@ -57,16 +60,10 @@ impl MovingLightStripsAnimation {
             let i = upper_border - 1 - i;
 
             if i == 0 {
-                std::mem::replace(
-                    &mut self.rgb_data[i],
-                    (0, 0, 0)
-                );
+                std::mem::replace(&mut self.rgb_data[i], (0, 0, 0));
             } else {
                 let prev = self.rgb_data[i - 1].clone();
-                std::mem::replace(
-                    &mut self.rgb_data[i],
-                    prev
-                );
+                std::mem::replace(&mut self.rgb_data[i], prev);
             }
         }
     }
@@ -89,4 +86,3 @@ impl MovingLightStripsAnimation {
         std::mem::replace(&mut self.rgb_data[14], darken_rgb(r, g, b, 0.1));
     }
 }
-

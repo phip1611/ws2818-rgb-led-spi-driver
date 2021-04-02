@@ -1,8 +1,8 @@
 //! Generic Hardware Abstraction Layer, no_std-compatible.
 
 use crate::encoding::encode_rgb_slice;
-use alloc::string::String;
 use alloc::boxed::Box;
+use alloc::string::String;
 
 /// SPI-device abstraction.
 pub trait HardwareDev {
@@ -10,7 +10,6 @@ pub trait HardwareDev {
 }
 
 pub trait WS28xxAdapter {
-
     /// Returns a reference to the hardware device.
     /// This function only needs to be implemented once in the generic adapter.
     fn get_hw_dev(&mut self) -> &mut Box<dyn HardwareDev>;
@@ -55,12 +54,9 @@ pub struct WS28xxGenAdapter {
 }
 
 impl WS28xxGenAdapter {
-
     /// Constructor that stores the hardware device in the adapter.
     pub fn new(hw: Box<dyn HardwareDev>) -> Self {
-        Self {
-            hw
-        }
+        Self { hw }
     }
 }
 

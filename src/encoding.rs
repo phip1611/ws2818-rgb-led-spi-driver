@@ -3,7 +3,9 @@
 //! use the optional "adapter_spidev"-feature then take this as a template and build your own encoding functions.
 //! So far this file and it's functions are static and not dynamic.
 
-use crate::timings::encoding::{SPI_BYTES_PER_DATA_BIT, WS2812_LOGICAL_ZERO_BYTES, WS2812_LOGICAL_ONE_BYTES};
+use crate::timings::encoding::{
+    SPI_BYTES_PER_DATA_BIT, WS2812_LOGICAL_ONE_BYTES, WS2812_LOGICAL_ZERO_BYTES,
+};
 use alloc::vec::Vec;
 
 const COLORS: usize = 3; // r, g, b
@@ -29,10 +31,10 @@ pub fn encode_rgb(r: u8, g: u8, b: u8) -> [u8; SPI_BYTES_PER_RGB_PIXEL] {
             // for each bit of our color; starting with most significant
             // we encode now one color bit in two spi bytes (for proper timings along with our frequency)
             if 0b10000000 & color_bits == 0 {
-                spi_bytes[spi_bytes_i]     = WS2812_LOGICAL_ZERO_BYTES[0];
+                spi_bytes[spi_bytes_i] = WS2812_LOGICAL_ZERO_BYTES[0];
                 spi_bytes[spi_bytes_i + 1] = WS2812_LOGICAL_ZERO_BYTES[1];
             } else {
-                spi_bytes[spi_bytes_i]     = WS2812_LOGICAL_ONE_BYTES[0];
+                spi_bytes[spi_bytes_i] = WS2812_LOGICAL_ONE_BYTES[0];
                 spi_bytes[spi_bytes_i + 1] = WS2812_LOGICAL_ONE_BYTES[1];
             }
             color_bits = color_bits << 1;
@@ -46,8 +48,7 @@ pub fn encode_rgb(r: u8, g: u8, b: u8) -> [u8; SPI_BYTES_PER_RGB_PIXEL] {
 /// Encodes multiple RGB values in a slice. Uses [`encode_rgb`] for each value.
 pub fn encode_rgb_slice(data: &[(u8, u8, u8)]) -> Vec<u8> {
     let mut bytes = vec![];
-    data.iter().for_each(|rgb| {
-        bytes.extend_from_slice(&encode_rgb(rgb.0, rgb.1, rgb.2))
-    });
+    data.iter()
+        .for_each(|rgb| bytes.extend_from_slice(&encode_rgb(rgb.0, rgb.1, rgb.2)));
     bytes
 }

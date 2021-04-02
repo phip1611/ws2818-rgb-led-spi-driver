@@ -3,10 +3,10 @@
 //! with DIN-Pin. You just need DIN pin, no clock. WS2818 uses one-wire-protocol.
 //! See the specification for details
 
-use ws2818_examples::{sleep_busy_waiting_ms, get_led_square_dim_from_args};
-use ws2818_rgb_led_spi_driver::encoding::{encode_rgb};
-use ws2818_rgb_led_spi_driver::adapter_spi::WS28xxSpiAdapter;
+use ws2818_examples::{get_led_square_dim_from_args, sleep_busy_waiting_ms};
 use ws2818_rgb_led_spi_driver::adapter_gen::WS28xxAdapter;
+use ws2818_rgb_led_spi_driver::adapter_spi::WS28xxSpiAdapter;
+use ws2818_rgb_led_spi_driver::encoding::encode_rgb;
 
 const BRIGHTNESS_FACTOR: f64 = 0.2;
 
@@ -19,7 +19,7 @@ fn main() {
 
     let mut reverse_dir = true;
     let half_dim = dim / 2;
-    let (mut r, mut g, mut b) = (255/3, 255/3 * 2, 255);
+    let (mut r, mut g, mut b) = (255 / 3, 255 / 3 * 2, 255);
     loop {
         reverse_dir = !reverse_dir;
 
@@ -34,7 +34,7 @@ fn main() {
                 (b as f64 * BRIGHTNESS_FACTOR) as u8,
             );
             if reverse_dir {
-                size = half_dim + 1 - 1 -size;
+                size = half_dim + 1 - 1 - size;
             }
 
             let mut rgb_matrix = vec![];
@@ -76,7 +76,11 @@ fn main() {
                     char_matrix[top_l_j + i][top_l_i] = 'X';
                 }
                 // i don't know why tho but it works xD
-                let active_leds_per_active_line = if dim % 2 == 0 { active_leds_per_active_line } else { active_leds_per_active_line + 1 };
+                let active_leds_per_active_line = if dim % 2 == 0 {
+                    active_leds_per_active_line
+                } else {
+                    active_leds_per_active_line + 1
+                };
                 for i in 0..active_leds_per_active_line {
                     // right vertical lane
                     rgb_matrix[top_l_j + i][bottom_r_i] = rgb;
@@ -87,9 +91,11 @@ fn main() {
             let mut transfer_bits_vec: Vec<u8> = vec![];
             rgb_matrix.iter().for_each(|row| {
                 row.iter().for_each(|rgb_value| {
-                    transfer_bits_vec.extend_from_slice(
-                        &encode_rgb(rgb_value.0, rgb_value.1, rgb_value.2 )
-                    );
+                    transfer_bits_vec.extend_from_slice(&encode_rgb(
+                        rgb_value.0,
+                        rgb_value.1,
+                        rgb_value.2,
+                    ));
                 });
             });
             adapter.write_encoded_rgb(&transfer_bits_vec).unwrap();
