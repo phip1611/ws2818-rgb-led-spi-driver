@@ -19,7 +19,7 @@ documentation = "https://docs.rs/ws2818-rgb-led-spi-driver/"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [features]
-# by default this crate needs "std" and uses "spidev" to accessSPI device on Linux
+# by default this crate needs "std" and uses "spidev" to access SPI device on Linux
 default = ["adapter_spidev"]
 adapter_spidev = ["spidev"]
 
