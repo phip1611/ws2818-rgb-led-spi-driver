@@ -3,14 +3,15 @@
 //! with DIN-Pin. You just need DIN pin, no clock. WS2818 uses one-wire-protocol.
 //! See the specification for details
 
-use ws2818_examples::{sleep_busy_waiting_ms, get_led_square_dim_from_args};
-use ws2818_rgb_led_spi_driver::encoding::{encode_rgb_slice};
-use ws2818_rgb_led_spi_driver::adapter::WS28xxAdapter;
+use ws2818_examples::{get_led_square_dim_from_args, sleep_busy_waiting_ms};
+use ws2818_rgb_led_spi_driver::adapter_gen::WS28xxAdapter;
+use ws2818_rgb_led_spi_driver::adapter_spi::WS28xxSpiAdapter;
+use ws2818_rgb_led_spi_driver::encoding::encode_rgb_slice;
 
 // Some colored animation on a 8x8 led matrix.
 fn main() {
     println!("make sure you have \"SPI\" on your Pi enabled and that MOSI-Pin is connected with DIN-Pin!");
-    let mut adapter = WS28xxAdapter::new("/dev/spidev0.0").unwrap();
+    let mut adapter = WS28xxSpiAdapter::new("/dev/spidev0.0").unwrap();
     let dim = get_led_square_dim_from_args();
     let rows = dim;
     let cols = dim;
@@ -26,17 +27,17 @@ fn main() {
 
             // calc red
             let (r_row, r_col) = ((rows - row - 1) as f64, col as f64);
-            let r = 255_f64 * ((r_row + 1_f64) * (r_col + 1_f64))/(leds_f64);
+            let r = 255_f64 * ((r_row + 1_f64) * (r_col + 1_f64)) / (leds_f64);
             let r = r.round() as u8;
 
             // calc green
             let (g_row, g_col) = (row as f64, col as f64);
-            let g = 255_f64 * ((g_row + 1_f64) * (g_col + 1_f64))/(leds_f64);
+            let g = 255_f64 * ((g_row + 1_f64) * (g_col + 1_f64)) / (leds_f64);
             let g = g.round() as u8;
 
             // calc blue
             let (b_row, b_col) = (row as f64, (cols - col - 1) as f64);
-            let b = 255_f64 * ((b_row + 1_f64) * (b_col + 1_f64))/(leds_f64);
+            let b = 255_f64 * ((b_row + 1_f64) * (b_col + 1_f64)) / (leds_f64);
             let b = b.round() as u8;
 
             //rgb_data.push((r, g, b));
@@ -63,16 +64,16 @@ fn main() {
                     let next = (&rgb_data_current[led_i + 1]).clone();
                     std::mem::replace(&mut rgb_data_current[led_i], next);
                     std::mem::replace(&mut rgb_data_current[leds - 1], curr);
-                }
-                else if led_i + 1 < leds {
+                } else if led_i + 1 < leds {
                     let next = (&rgb_data_current[led_i + 1]).clone();
                     std::mem::replace(&mut rgb_data_current[led_i], next);
                 }
             }
         }
-        let rgb_data_current_encoded =  encode_rgb_slice(&rgb_data_current);
-        adapter.write_encoded_rgb(&rgb_data_current_encoded).unwrap();
+        let rgb_data_current_encoded = encode_rgb_slice(&rgb_data_current);
+        adapter
+            .write_encoded_rgb(&rgb_data_current_encoded)
+            .unwrap();
         sleep_busy_waiting_ms(50);
     }
-
 }

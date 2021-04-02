@@ -1,3 +1,8 @@
+# 2.0.0
+This release is breaking.
+* Changed main branch from `master` to `main`
+* `#[no_std]`-support
+
 # 1.0.1
 Updated to SpiDev 0.4.1.
 
