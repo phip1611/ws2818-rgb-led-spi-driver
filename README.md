@@ -36,15 +36,30 @@ Have a look into the examples/code for further explications. :)
 ### Examples
 See https://github.com/phip1611/ws2818-rgb-led-spi-driver/tree/master/examples. 
 
+#### Cargo.toml
+```toml
+[dependencies]
+ws2818-rgb-led-spi-driver = "<latest version>"
+# or if you need no_std
+ws2818-rgb-led-spi-driver = { version = "<latest version>", default-features = false }
+```
+
+#### Code
 ```rust
-use ws2818_rgb_led_spi_driver::encoding::{encode_rgb};
-use ws2818_rgb_led_spi_driver::adapter::WS28xxAdapter;
+//! Example that definitely works on Raspberry Pi.
+//! Make sure you have "SPI" on your Pi enabled and that MOSI-Pin is connected
+//! with DIN-Pin of the LEDs. You just need DIN pin, no clock. WS2818 uses an one-wire-protocol.
+//! See the specification for details.
+
+use ws2818_rgb_led_spi_driver::adapter_gen::WS28xxAdapter;
+use ws2818_rgb_led_spi_driver::adapter_spi::WS28xxSpiAdapter;
+use ws2818_rgb_led_spi_driver::encoding::encode_rgb;
 
 fn main() {
     println!("make sure you have \"SPI\" on your Pi enabled and that MOSI-Pin is connected with DIN-Pin!");
-    let mut adapter = WS28xxAdapter::new("/dev/spidev0.0").unwrap();
+    let mut adapter = WS28xxSpiAdapter::new("/dev/spidev0.0").unwrap();
 
-    // Method 1: encode first and write in two step (prefered way; better performance)
+    // Method 1: encode first and write in two step (preferred way; better performance)
     {
         let mut spi_encoded_rgb_bits = vec![];
         // set first three pixels to bright red, bright green and bright blue
@@ -64,6 +79,7 @@ fn main() {
         adapter.write_rgb(&rgb_values).unwrap();
     }
 }
+
 ```
 
 ##### Links
