@@ -82,6 +82,11 @@ fn main() {
 
 ```
 
+## CPU-intensive spin lock
+My example code uses CPU intensive spin locks in order to work properly all the time.
+If you experience a flickering of the LEDs when using `thread::sleep()` instead, then
+please have a look at: <https://github.com/phip1611/ws2818-rgb-led-spi-driver/issues/9>
+
 ##### Links
 
 [0] https://www.az-delivery.de/products/u-64-led-panel?variant=6127700738075 \
