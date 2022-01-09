@@ -2,6 +2,9 @@ use std::ops::Add;
 use std::process::exit;
 use std::time::{Duration, Instant};
 
+/// My example code uses CPU intensive spin locks in order to work properly all the time.
+/// If you experience a flickering of the LEDs when using `thread::sleep()` instead, then
+/// please have a look at: <https://github.com/phip1611/ws2818-rgb-led-spi-driver/issues/9>
 #[inline(always)]
 pub fn sleep_busy_waiting_ms(ms: u64) {
     let target_time = Instant::now().add(Duration::from_millis(ms));
